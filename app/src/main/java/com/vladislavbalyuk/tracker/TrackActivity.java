@@ -94,13 +94,15 @@ public class TrackActivity extends AppCompatActivity {
         }
         CameraUpdate cameraUpdate;
         if(useLastLocation) {
-            int width = getResources().getDisplayMetrics().widthPixels;
-            int height = getResources().getDisplayMetrics().heightPixels;
-            int size = Math.min(width, height);
+            if(track.getPoints().size() > 0) {
+                int width = getResources().getDisplayMetrics().widthPixels;
+                int height = getResources().getDisplayMetrics().heightPixels;
+                int size = Math.min(width, height);
 
-            LatLngBounds latLngBounds = latLngBuilder.build();
-            cameraUpdate = CameraUpdateFactory.newLatLngBounds(latLngBounds, size, size, 100);
-            googleMap.moveCamera(cameraUpdate);
+                LatLngBounds latLngBounds = latLngBuilder.build();
+                cameraUpdate = CameraUpdateFactory.newLatLngBounds(latLngBounds, size, size, 100);
+                googleMap.moveCamera(cameraUpdate);
+            }
         }
         else {
             CameraPosition cameraPosition = new CameraPosition.Builder()

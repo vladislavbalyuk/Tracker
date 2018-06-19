@@ -90,7 +90,7 @@ public class MainActivityFragment extends Fragment {
         Context context = getActivity().getApplicationContext();
 
         db = Db.getInstance(context);
-//        db.getTest();
+        db.getTest();
         intent = new Intent(context, TrackService.class);
 
     }

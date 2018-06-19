@@ -42,6 +42,7 @@ public class Db {
         cv.put("_id", point.getUuid());
         cv.put("Track", track.getUuid());
         cv.put("Num", number);
+        cv.put("Altitude", point.getAltitude());
         cv.put("Latitude", point.getLatitude());
         cv.put("Longitude", point.getLongitude());
         cv.put("Adress", point.getAdress());
@@ -70,6 +71,7 @@ public class Db {
         cv.put("_id", point.getUuid());
         cv.put("Track", track.getUuid());
         cv.put("Num", number);
+        cv.put("Altitude", point.getAltitude());
         cv.put("Latitude", point.getLatitude());
         cv.put("Longitude", point.getLongitude());
         cv.put("Adress", point.getAdress());
@@ -230,7 +232,7 @@ public class Db {
         List<Point> points;
         points = new ArrayList<Point>();
 
-        String sqlQuery = "select P._id, P.Longitude, P.Latitude, P.Date, P.Adress from Points as P where P.Track = ? order by P.Num";
+        String sqlQuery = "select P._id, P.Longitude, P.Latitude, P.Date, P.Adress, P.Altitude from Points as P where P.Track = ? order by P.Num";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         try {
             db = dbh.getWritableDatabase();
@@ -242,6 +244,7 @@ public class Db {
                         point.setUuid(c.getString(0));
                         point.setLongitude(new Double(c.getString(1)).doubleValue());
                         point.setLatitude(new Double(c.getString(2)).doubleValue());
+                        point.setAltitude(new Double(c.getString(5)).doubleValue());
                         try {
                             point.setDate(sdf.parse(c.getString(3)));
                         } catch (ParseException e) {
@@ -266,7 +269,7 @@ public class Db {
     //TEST
     public void getTest() {
 
-        String sqlQuery = "select P._id, P.Track, P.Num, P.Longitude, P.Latitude, P.Date, P.Adress from Points as P";
+        String sqlQuery = "select P._id, P.Track, P.Num, P.Altitude, P.Longitude, P.Latitude, P.Date, P.Adress from Points as P";
 //        String sqlQuery = "select P._id, P.Name from Tracks as P";
         try {
             db = dbh.getWritableDatabase();
@@ -276,7 +279,7 @@ public class Db {
                 if (c.moveToFirst()) {
                     do {
 //                        Log.d("MyTag","" + c.getString(0) + "   " + c.getString(1));
-                        Log.d("MyTag","" + c.getString(0) + "   " + c.getString(1) + "  " + c.getString(2) + "  " + c.getString(3) + "  " + c.getString(4) + "  " + c.getString(5) + "  " + c.getString(6));
+                        Log.d("MyTag","" + c.getString(0) + "   " + c.getString(1) + "  " + c.getString(2) + "  " + c.getString(3) + "  " + c.getString(4) + "  " + c.getString(5) + "  " + c.getString(6) + "  " + c.getString(7));
                     } while (c.moveToNext());
                 }
             }
@@ -309,6 +312,7 @@ public class Db {
                     + "Num numeric,"
                     + "Longitude real,"
                     + "Latitude real,"
+                    + "Altitude real,"
                     + "Date datetime,"
                     + "Adress text" + ");");
         }

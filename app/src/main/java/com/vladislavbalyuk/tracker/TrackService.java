@@ -43,7 +43,7 @@ public class TrackService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         Intent intentActivity = new Intent(getApplicationContext(), MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),100,intentActivity,PendingIntent.FLAG_NO_CREATE);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),1,intentActivity,PendingIntent.FLAG_CANCEL_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setContentText("Tracker")
@@ -107,12 +107,13 @@ public class TrackService extends Service {
         return track;
     }
 
-    private Point createPoint(double lat, double lon) {
+    private Point createPoint(double alt, double lat, double lon, Date date) {
         Point point = new Point();
         point.setRandomUuid();
+        point.setAltitude(alt);
         point.setLatitude(lat);
         point.setLongitude(lon);
-        point.setCurrentDate();
+        point.setDate(date);
         return point;
     }
 
@@ -126,10 +127,11 @@ public class TrackService extends Service {
 
         @Override
         public void onLocationChanged(Location location) {
-            Log.d("MyTag", "" + location.getLatitude() + "  " + location.getLongitude());
+            double alt = location.getAltitude();
             double lat = location.getLatitude();
             double lon = location.getLongitude();
-            Point point = createPoint(lat, lon);
+            long time = location.getTime();
+            Point point = createPoint(alt, lat, lon, new Date(time));
 
             new PointTask().execute(point);
 

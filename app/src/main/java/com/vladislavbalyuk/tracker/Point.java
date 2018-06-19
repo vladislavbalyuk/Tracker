@@ -6,9 +6,18 @@ import java.util.UUID;
 public class Point {
     private double longitude;
     private double latitude;
+    private double altitude;
     private Date date;
     private String uuid;
     private String adress;
+
+    public double getAltitude() {
+        return altitude;
+    }
+
+    public void setAltitude(double altitude) {
+        this.altitude = altitude;
+    }
 
     public double getLongitude() {
         return longitude;
@@ -49,6 +58,7 @@ public class Point {
     public void setAdress(String adress) {
         this.adress = adress;
     }
+
 
     public void setRandomUuid() {
         this.uuid = String.valueOf(UUID.randomUUID());

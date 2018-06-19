@@ -18,6 +18,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -86,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         useLastLocation = (savedInstanceState == null);
+        Log.d("MyTag", "" + useLastLocation);
 
         new GetPreferenceTask().execute();
 
@@ -99,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initMap() {
         double lat, lng;
+        float zoom;
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -118,14 +121,16 @@ public class MainActivity extends AppCompatActivity {
         if (useLastLocation && currentLocation != null) {
             lat = currentLocation.getLatitude();
             lng = currentLocation.getLongitude();
+            zoom = 15;
         } else {
             lat = prefLat;
             lng = prefLng;
+            zoom = prefZoom;
         }
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(new LatLng(lat, lng))
-                .zoom(prefZoom)
+                .zoom(zoom)
                 .build();
         CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
         googleMap.animateCamera(cameraUpdate);

@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class TrackActivityFragment  extends Fragment{
+public class TrackActivityFragment extends Fragment {
 
     private View view;
 
@@ -61,15 +61,16 @@ public class TrackActivityFragment  extends Fragment{
         super.onDetach();
         activity = null;
     }
+
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
 
-    public void getTrack(){
+    public void getTrack() {
         new GetTrackTask().execute();
     }
 
-    class GetTrackTask extends AsyncTask<Void, Void, Void>{
+    class GetTrackTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -81,12 +82,14 @@ public class TrackActivityFragment  extends Fragment{
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            activity.showTrack(track);
-            textTime.setText(track.getTotalTime());
-            textDistance.setText(String.format("%.0f",track.getTotalDistance()) + "m");
-            textSpeed.setText(String.format("%.0f",track.getTotalSpeed()) + "km/h");
-            textAdressFrom.setText(track.getPoints().get(0).getAdress());
-            textAdressTo.setText(track.getPoints().get(track.getPoints().size()-1).getAdress());
+            if (track.getPoints().size() > 0) {
+                activity.showTrack(track);
+                textTime.setText(track.getTotalTime());
+                textDistance.setText(String.format("%.0f", track.getTotalDistance()) + "m");
+                textSpeed.setText(String.format("%.0f", track.getTotalSpeed()) + "km/h");
+                textAdressFrom.setText(track.getPoints().get(0).getAdress());
+                textAdressTo.setText(track.getPoints().get(track.getPoints().size() - 1).getAdress());
+            }
         }
     }
 }
