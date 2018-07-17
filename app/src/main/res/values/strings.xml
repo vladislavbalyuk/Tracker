@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">GPS Tracker</string>
     <string name="action_settings">Track list</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_save">Send KML file</string>
     <string name="start_tracking">Start tracking</string>
     <string name="end_tracking">End tracking</string>
     <string name="track_uuid">track_uuid</string>

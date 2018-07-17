@@ -66,7 +66,11 @@ public class TrackActivityFragment extends Fragment {
         this.uuid = uuid;
     }
 
-    public void getTrack() {
+    public Track getTrack() {
+        return track;
+    }
+
+    public void readTrack() {
         new GetTrackTask().execute();
     }
 
@@ -90,6 +94,8 @@ public class TrackActivityFragment extends Fragment {
                 textAdressFrom.setText(track.getPoints().get(0).getAdress());
                 textAdressTo.setText(track.getPoints().get(track.getPoints().size() - 1).getAdress());
             }
+
+            activity.setItemMenuVisible(true);
         }
     }
 }

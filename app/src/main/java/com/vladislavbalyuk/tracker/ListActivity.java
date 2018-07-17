@@ -9,7 +9,7 @@ import android.view.MenuItem;
 
 public class ListActivity extends AppCompatActivity {
 
-    Menu optionsMenu;
+    private Menu optionsMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +25,7 @@ public class ListActivity extends AppCompatActivity {
 
         optionsMenu = menu;
         ListActivityFragment fragment = (ListActivityFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_list);
-        optionsMenu.getItem(0).setVisible(fragment.isMenuItemVisible());
+        setItemMenuVisible(fragment.isMenuItemVisible());
 
         return true;
     }

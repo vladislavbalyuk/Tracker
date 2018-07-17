@@ -1,13 +1,19 @@
 package com.vladislavbalyuk.tracker;
 
+import android.*;
+import android.Manifest;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -30,6 +36,8 @@ public class TrackActivity extends AppCompatActivity {
     private double prefLat, prefLng;
     private float prefZoom;
     private boolean useLastLocation;
+
+    private Menu optionsMenu;
 
     private GoogleMap googleMap;
     private TrackActivityFragment fragment;
@@ -55,6 +63,50 @@ public class TrackActivity extends AppCompatActivity {
         setPreference();
     }
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_track, menu);
+
+        optionsMenu = menu;
+        setItemMenuVisible(false);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id == R.id.action_save) {
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        0);
+            }
+            else
+                Kml.sendKml(this,fragment.getTrack());
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions,
+                                           int[] grantResults) {
+        if (requestCode == 0) {
+            if(grantResults.length == 2
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                Kml.sendKml(this,fragment.getTrack());
+
+            } else {
+                // Permission was denied or request was cancelled
+            }
+        }
+    }
     public void showTrack(Track track) {
         Point start, finish = null;
         LatLngBounds.Builder latLngBuilder;
@@ -128,6 +180,11 @@ public class TrackActivity extends AppCompatActivity {
         ed.apply();
     }
 
+    public void setItemMenuVisible(boolean visible){
+        if(optionsMenu != null)
+            optionsMenu.getItem(0).setVisible(visible);
+    }
+
     private class GetPreferenceTask extends AsyncTask<Void, Void, Void> {
         SharedPreferences sPref;
 
@@ -158,7 +215,7 @@ public class TrackActivity extends AppCompatActivity {
             } catch (NullPointerException e) {
             }
             ;
-            fragment.getTrack();
+            fragment.readTrack();
         }
     }
 
