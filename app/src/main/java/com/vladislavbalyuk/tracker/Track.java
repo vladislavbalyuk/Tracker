@@ -108,4 +108,26 @@ public class Track {
         return speed;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Track)) return false;
+
+        Track track = (Track) o;
+
+        if (getPoints() != null ? !getPoints().equals(track.getPoints()) : track.getPoints() != null)
+            return false;
+        if (getName() != null ? !getName().equals(track.getName()) : track.getName() != null)
+            return false;
+        return getUuid() != null ? getUuid().equals(track.getUuid()) : track.getUuid() == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getPoints() != null ? getPoints().hashCode() : 0;
+        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+        result = 31 * result + (getUuid() != null ? getUuid().hashCode() : 0);
+        return result;
+    }
 }

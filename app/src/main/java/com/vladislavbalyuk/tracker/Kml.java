@@ -20,9 +20,8 @@ public class Kml {
     public static void sendKml(Context ctx, Track track) {
         new SendKmlTask(ctx, track).execute();
     }
-}
 
-class SendKmlTask extends AsyncTask<Void, Void, Void> {
+    static class  SendKmlTask extends AsyncTask<Void, Void, Void> {
 
     Context ctx;
     Track track;
@@ -135,5 +134,6 @@ class SendKmlTask extends AsyncTask<Void, Void, Void> {
         }
     }
 
+}
 
 }

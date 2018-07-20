@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
@@ -206,7 +207,7 @@ public class MainActivityFragment extends Fragment {
                     e.printStackTrace();
                 }
                 googleApi.getData(latitude.toString() + "," + longitude.toString(),
-                        "en", getResources().getString(R.string.API_KEY)).enqueue(new Callback<Results>() {
+                        Locale.getDefault().getLanguage(), getResources().getString(R.string.API_KEY)).enqueue(new Callback<Results>() {
                     @Override
                     public void onResponse(Call<Results> call, Response<Results> response) {
                         if (response.body() != null) {

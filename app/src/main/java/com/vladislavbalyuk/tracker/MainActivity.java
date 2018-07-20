@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageButton;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -55,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
     private float prefZoom;
     private boolean useLastLocation;
 
+    private ImageButton btnSetLocation;
+
     private Toolbar toolbar;
 
     @Override
@@ -87,7 +90,36 @@ public class MainActivity extends AppCompatActivity {
         }
 
         useLastLocation = (savedInstanceState == null);
-        Log.d("MyTag", "" + useLastLocation);
+
+        btnSetLocation = (ImageButton) findViewById(R.id.btnLocate);
+        btnSetLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ActivityCompat.checkSelfPermission(v.getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(v.getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+
+                Location currentLocation = null;
+                LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                    currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                }
+                if (currentLocation == null && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                }
+
+                if (currentLocation != null) {
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .target(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
+                            .zoom(googleMap.getCameraPosition().zoom)
+                            .build();
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
+                    googleMap.animateCamera(cameraUpdate);
+                }
+
+            }
+        });
 
         new GetPreferenceTask().execute();
 
@@ -134,10 +166,10 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
         googleMap.animateCamera(cameraUpdate);
-        googleMap.getUiSettings().setCompassEnabled(true);
-        //           googleMap.setMyLocationEnabled(true);
+        //googleMap.getUiSettings().setCompassEnabled(true);
+                   //googleMap.setMyLocationEnabled(true);
         //googleMap.getUiSettings().setZoomControlsEnabled(true);
-        //          googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+                 //googleMap.getUiSettings().setMyLocationButtonEnabled(true);
 
     }
 
@@ -242,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class GetPreferenceTask extends AsyncTask<Void, Void, Void> {
+    private class GetPreferenceTask extends AsyncTask<Void, Void, Void>  {
         SharedPreferences sPref;
         boolean showTrack;
 

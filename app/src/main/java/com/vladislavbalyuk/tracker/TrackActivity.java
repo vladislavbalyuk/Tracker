@@ -1,12 +1,14 @@
 package com.vladislavbalyuk.tracker;
 
-import android.*;
 import android.Manifest;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -14,6 +16,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -37,6 +41,8 @@ public class TrackActivity extends AppCompatActivity {
     private float prefZoom;
     private boolean useLastLocation;
 
+    private ImageButton btnSetLocation, btnWholeView;
+
     private Menu optionsMenu;
 
     private GoogleMap googleMap;
@@ -53,6 +59,44 @@ public class TrackActivity extends AppCompatActivity {
         fragment = (TrackActivityFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
         fragment.setUuid(getIntent().getStringExtra("uuid"));
         useLastLocation = (savedInstanceState == null);
+
+        btnSetLocation = (ImageButton) findViewById(R.id.btnLocate);
+        btnSetLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ActivityCompat.checkSelfPermission(v.getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(v.getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+
+                Location currentLocation = null;
+                LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                    currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                }
+                if (currentLocation == null && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                }
+
+                if (currentLocation != null) {
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .target(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
+                            .zoom(googleMap.getCameraPosition().zoom)
+                            .build();
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
+                    googleMap.animateCamera(cameraUpdate);
+                }
+
+            }
+        });
+
+        btnWholeView = (ImageButton) findViewById(R.id.btnWholeView);
+        btnWholeView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new GetPreferenceTask().execute();
+            }
+        });
 
         new GetPreferenceTask().execute();
     }
@@ -153,7 +197,7 @@ public class TrackActivity extends AppCompatActivity {
 
                 LatLngBounds latLngBounds = latLngBuilder.build();
                 cameraUpdate = CameraUpdateFactory.newLatLngBounds(latLngBounds, size, size, 100);
-                googleMap.moveCamera(cameraUpdate);
+                googleMap.animateCamera(cameraUpdate);
             }
         }
         else {
@@ -162,14 +206,10 @@ public class TrackActivity extends AppCompatActivity {
                     .zoom(prefZoom)
                     .build();
             cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
-            googleMap.moveCamera(cameraUpdate);
+            googleMap.animateCamera(cameraUpdate);
             googleMap.getUiSettings().setCompassEnabled(true);
         }
-        //           googleMap.setMyLocationEnabled(true);
-        //googleMap.getUiSettings().setZoomControlsEnabled(true);
-        //          googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-
-    }
+     }
 
     private void setPreference() {
         SharedPreferences sPref = getPreferences(MODE_PRIVATE);

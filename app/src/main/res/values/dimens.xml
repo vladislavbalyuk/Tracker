@@ -1,3 +1,9 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="small_margin">10dp</dimen>
+    <dimen name="big_height">60dp</dimen>
+    <dimen name="middle_height">40dp</dimen>
+    <dimen name="small_height">20dp</dimen>
+    <dimen name="btn_size">40dp</dimen>
+    <dimen name="text_size">20sp</dimen>
 </resources>

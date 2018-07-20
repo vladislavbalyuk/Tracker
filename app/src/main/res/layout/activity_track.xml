@@ -5,40 +5,71 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.vladislavbalyuk.tracker.MainActivity">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
 
-    </android.support.design.widget.AppBarLayout>
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/fragment"
-        android:name="com.vladislavbalyuk.tracker.TrackActivityFragment"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:layout="@layout/fragment_track" />
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.MapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </fragment>
-</LinearLayout>
+        </android.support.design.widget.AppBarLayout>
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/fragment"
+            android:name="com.vladislavbalyuk.tracker.TrackActivityFragment"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/big_height"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout="@layout/fragment_track" />
+
+        <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:showIn="@layout/activity_track">
+
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.MapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></fragment>
+
+            <ImageButton
+                android:id="@+id/btnLocate"
+                android:layout_width="@dimen/btn_size"
+                android:layout_height="@dimen/btn_size"
+                android:layout_margin="@dimen/small_margin"
+                android:background="#AAEEEEEE"
+                android:src="@drawable/ic_my_location_black_24dp"
+                app:layout_constraintRight_toRightOf="@id/map"
+                app:layout_constraintTop_toTopOf="@id/map" />
+
+            <ImageButton
+                android:id="@+id/btnWholeView"
+                android:layout_width="@dimen/btn_size"
+                android:layout_height="@dimen/btn_size"
+                android:layout_margin="@dimen/small_margin"
+                android:background="#AAEEEEEE"
+                android:src="@drawable/ic_crop_original_black_24dp"
+                app:layout_constraintRight_toRightOf="@id/map"
+                app:layout_constraintTop_toBottomOf="@id/btnLocate" />
+
+        </android.support.constraint.ConstraintLayout>
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>
